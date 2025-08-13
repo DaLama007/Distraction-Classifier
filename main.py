@@ -13,8 +13,10 @@ df.info()
 
 #drop unnecessary data from csv from active-win
 def preprocessData(df):
-    df.drop(colums=['platform,id,owner,bounds,memoryUsage'],inplace=True)
+    df.drop(columns=['platform','id','owner','bounds','memoryUsage'],inplace=True)
     return df
+
+df=preprocessData(df)
 
 #vectorize text
 x_train,x_test,y_train,y_test=train_test_split(df['title'],df['label'],test_size=0.2,random_state=42)
@@ -25,6 +27,20 @@ x_test_tfidf = vectorizer.transform(x_test)
 #train model using logisitc regression
 trainingModel=LogisticRegression()
 trainingModel.fit(x_train_tfidf,y_train)
+
 #test model accuracy
 y_pred=trainingModel.predict(x_test_tfidf)
 print("Score:"+ str(accuracy_score(y_test,y_pred)))
+
+#singular test case 
+new_site = ['The Manim Experience - Creating animations with Python']
+new_site_tfidf=vectorizer.transform(new_site)
+
+
+probability=trainingModel.predict_proba(new_site_tfidf)[0][1]
+#display probability and result
+print(probability)
+if probability>0.7:
+    print('Site is probably distracting')
+else:
+    print('This is educational!')
