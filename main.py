@@ -7,6 +7,8 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 import numpy as np
 
+import joblib
+
 #get data from csv file
 df= pd.read_csv('youtube_activewin_feed_labeled.csv')
 df.info()
@@ -33,14 +35,23 @@ y_pred=trainingModel.predict(x_test_tfidf)
 print("Score:"+ str(accuracy_score(y_test,y_pred)))
 
 #singular test case 
-new_site = ['The Manim Experience - Creating animations with Python']
+new_site = ['minecraft hardcore videos be likex']
 new_site_tfidf=vectorizer.transform(new_site)
 
 
 probability=trainingModel.predict_proba(new_site_tfidf)[0][1]
 #display probability and result
 print(probability)
-if probability>0.7:
+if probability>0.5:
     print('Site is probably distracting')
 else:
     print('This is educational!')
+
+user_response=input("Do you want to export models? (y/N): ")
+
+if user_response.lower() == 'y':
+    # Save the trained model
+    joblib.dump(trainingModel, "model.pkl")
+
+    # Save the vectorizer too
+    joblib.dump(vectorizer, "vectorizer.pkl")
