@@ -8,9 +8,11 @@ import pandas as pd
 import numpy as np
 
 import joblib
+import os
+print("Current working directory:", os.getcwd())
 
 #get data from csv file
-df= pd.read_csv('youtube_activewin_feed_labeled.csv')
+df= pd.read_csv('Distraction-Classifier/youtube_activewin_feed_labeled.csv')
 df.info()
 
 #drop unnecessary data from csv from active-win
@@ -35,14 +37,14 @@ y_pred=trainingModel.predict(x_test_tfidf)
 print("Score:"+ str(accuracy_score(y_test,y_pred)))
 
 #singular test case 
-new_site = ['minecraft hardcore videos be likex']
+new_site = ['Filip Zieba Debunked - TikTok\'s Worst Conspiracy Theorist | Pt. 1']
 new_site_tfidf=vectorizer.transform(new_site)
 
 
 probability=trainingModel.predict_proba(new_site_tfidf)[0][1]
 #display probability and result
 print(probability)
-if probability>0.5:
+if probability>0.4:
     print('Site is probably distracting')
 else:
     print('This is educational!')
